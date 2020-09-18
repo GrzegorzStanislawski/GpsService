@@ -40,14 +40,50 @@ class AzureProvider implements GpsProviderInterface
     {
         $this->token = $token;
 
-    }
+    }//end __construct()
 
 
     public function getByAddress(string $address)
     {
+        $client   = new \GuzzleHttp\Client(['base_uri' => 'https://atlas.microsoft.com/']);
+        $response = $client->request(
+            'GET',
+            'search/address/json',
+            [
+                'query' => [
+                    'subscription-key' => $this->token,
+                    'api-version'      => 1.0,
+                    'query'            => urlencode($address),
+                ],
+            ]
+        );
+
+        $data   = (array) json_decode($response->getBody(), true);
+        $return = [];
+
+        foreach ($data['results'] as $item) {
+            if ($item['type'] === 'Point Address') {
+                $return = $item;
+                break;
+            }//end if
+        }//end foreach
+
+        if (empty($return) === true) {
+            foreach ($data['results'] as $item) {
+                if (in_array($item['type'], ['POI', 'Geography']) === false) {
+                    $return = $item;
+                    break;
+                }//end if
+            }//end foreach
+        }//end if
+
+        if (empty($return) === true) {
+            $return = $data['results'][0];
+        }//end if
+
         return [
-            'lat' => 0.5,
-            'lng' => 0.6,
+            'lat' => $return['position']['lat'],
+            'lng' => $return['position']['lon'],
         ];
 
     }//end getByAddress()

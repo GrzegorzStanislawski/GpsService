@@ -15,4 +15,4 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-$router->get('api/address', 'GpsController@address');
+$router->get('api/address', 'GpsAddressController@address');

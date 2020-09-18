@@ -12,7 +12,11 @@
 */
 
 $router->get('/', function () use ($router) {
-    return $router->app->version();
+    return view('index');
 });
 
-$router->get('api/address', 'GpsAddressController@address');
+$router->get('swagger/schema', 'SwaggerController@schema');
+
+$router->group(['prefix' => 'api'], function () use ($router) {
+	$router->get('address', 'GpsAddressController@address');
+});

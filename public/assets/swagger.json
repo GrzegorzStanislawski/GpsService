@@ -33,9 +33,24 @@
         "summary": "Pobranie koordynatów na podstawie adresu",
         "description": "",
         "operationId": "positionByAddress",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
         "parameters": [
           {
-            "in": "query",
+            "in": "formData",
+            "name": "token",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "formData",
+            "name": "provider",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "formData",
             "name": "address",
             "type": "string",
             "required": true
@@ -47,7 +62,7 @@
         "responses": {
           "200": {
             "schema": {
-              "$ref": "#/definitions/CustomersResponse"
+              "$ref": "#/definitions/PositionResponse"
             }
           },
           "400": {
@@ -65,11 +80,32 @@
         "summary": "Pobranie adresu na podstawie koordynatów",
         "description": "",
         "operationId": "addressByPosition",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
         "parameters": [
           {
-            "in": "query",
-            "name": "address",
+            "in": "formData",
+            "name": "token",
             "type": "string",
+            "required": true
+          },
+          {
+            "in": "formData",
+            "name": "provider",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "formData",
+            "name": "lat",
+            "type": "number",
+            "required": true
+          },
+          {
+            "in": "formData",
+            "name": "lng",
+            "type": "number",
             "required": true
           }
         ],
@@ -79,7 +115,7 @@
         "responses": {
           "200": {
             "schema": {
-              "$ref": "#/definitions/CustomersResponse"
+              "$ref": "#/definitions/AddressResponse"
             }
           },
           "400": {
@@ -103,7 +139,7 @@
         "responses": {
           "200": {
             "schema": {
-              "$ref": "#/definitions/CustomersResponse"
+              "$ref": "#/definitions/ProvidersResponse"
             }
           },
           "400": {
@@ -131,540 +167,40 @@
         }
       }
     },
-    "LibraryFileModel": {
+    "PositionResponse": {
       "type": "object",
       "properties": {
-        "guid": {
-          "type": "string",
-          "description": "Unikalny identyfikator pliku"
+        "lat": {
+          "type": "number",
+          "description": "Pozycja latitude"
         },
-        "file_name": {
-          "type": "string",
+        "lng": {
+          "type": "number",
           "description": "Nazwa pliku"
-        },
-        "file_size": {
-          "type": "integer",
-          "description": "Rozmiar pliku"
-        },
-        "can_send": {
-          "type": "boolean",
-          "description": "Czy można załączyć do wiadomości"
-        },
-        "attach_count": {
-          "type": "integer",
-          "description": "Liczba załączeń pliku do wiadomości"
-        },
-        "use_count": {
-          "type": "integer",
-          "description": "Liczba otworzeń podczaś spotkania"
-        },
-        "source": {
-          "type": "string",
-          "description": "Źródło biblioteki (global - centralna, local - użytkownika, group - grupy)"
-        },
-        "created_at": {
-          "type": "string",
-          "description": "Data dodania pliku"
         }
       }
     },
 
-    "UserModel": {
+    "AddressResponse": {
       "type": "object",
       "properties": {
-        "id": {
-          "type": "integer",
-          "description": "Unikalny identyfikator handlowca"
-        },
-        "name": {
-          "type": "string",
-          "description": "Imię handlowca"
-        },
-        "lastname": {
-          "type": "string",
-          "description": "Nazwisko handlowca"
-        },
-        "email": {
-          "type": "string",
-          "description": "Email handlowca"
-        },
-        "last_activity": {
-          "type": "string",
-          "description": "Data ostatniej aktywności handlowca"
-        },
-        "report": {
-          "type": "boolean",
-          "description": "Czy zalicza się do raportów"
-        },
-        "created_at": {
-          "type": "string",
-          "description": "Data dodania handlowca do systemu"
-        },
-        "modified_at": {
-          "type": "string",
-          "description": "Ostatnia aktualizacja danych handlowca"
-        },
-        "delete_yn": {
-          "type": "string",
-          "description": "Czy jest usunięty Y/N"
-        }
-      }
-    },
-    "DeviceModel": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "integer",
-          "description": "Unikalny identyfikator urządzenia"
-        },
-        "id_user": {
-          "type": "integer",
-          "description": "identyfikator przypisanego użytkownika"
-        },
-        "os": {
-          "type": "string",
-          "description": "Typ urządzenia"
-        },
-        "ver_app": {
-          "type": "string",
-          "description": "Wersja aplikacji"
-        },
-        "ver_lib": {
-          "type": "string",
-          "description": "Wersja biblioteki"
-        },
-        "status": {
-          "type": "string",
-          "description": "Status urzadzenia (active, inactive, blocked)"
-        },
-        "last_activity": {
-          "type": "string",
-          "description": "Data ostatniej aktywności systemu"
-        },
-        "created_at": {
-          "type": "string",
-          "description": "Data dodania Urzadzenia do systemu"
-        },
-        "delete_yn": {
-          "type": "string",
-          "description": "Czy jest usunięty Y/N"
-        }
-      }
-    },
-    "MeetingModel": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "integer",
-          "description": "Unikalny identyfikator spotkania"
-        },
-        "hash": {
-          "type": "string",
-          "description": "Hash spotkania"
-        },
-        "id_user": {
-          "type": "integer",
-          "description": "identyfikator handlowca"
-        },
-        "id_customer": {
-          "type": "string",
-          "description": "identyfikator klienta"
-        },
-        "status": {
-          "type": "string",
-          "description": "Status spotkania (finished - spotkanie wysłane do klienta, saved - spotkanie zapisane, interrupted - spotkanie przerwane)"
-        },
-        "start_date": {
-          "type": "string",
-          "description": "Data rozpoczęcia spotkania"
-        },
-        "end_date": {
-          "type": "string",
-          "description": "Data zakończęnia spotkania"
-        },
         "address": {
           "type": "string",
-          "description": "Adres spotkania"
+          "description": "Adres podanych koordynatów"
         },
-        "visits": {
-          "type": "integer",
-          "description": "Liczba wyświetleń podsumowania"
-        },
-        "visits_owner": {
-          "type": "integer",
-          "description": "Liczba wyświetleń podsumowania przez odbiorcę"
-        },
-        "visits_copy": {
-          "type": "integer",
-          "description": "Liczba wyświetleń podsumowania przez kopię"
-        },
-        "gps_lat": {
-          "type": "string",
-          "description": "Współrzędne gps lat"
-        },
-        "gps_lng": {
-          "type": "string",
-          "description": "Współrzędne gps lon"
-        },
-        "start_lat": {
-          "type": "string",
-          "description": "Współrzędne gps lat rozpoczęcia spotkania"
-        },
-        "start_lng": {
-          "type": "string",
-          "description": "Współrzędne gps lon rozpoczęcia spotkania"
-        },
-        "type": {
-          "type": "string",
-          "description": "Typ spotkania (anonymous, standard)"
-        },
-        "next_steps": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type":"integer",
-                "description": "Unikalny identyfikator kroku spotkania"
-              },
-              "name": {
-                "type":"string",
-                "description": "Nazwa kroku"
-              },
-              "description": {
-                "type":"string",
-                "description": "Opis kroku"
-              },
-              "start_date": {
-                "type":"string",
-                "description": "Czas rozpoczęcia nastepnego kroku"
-              },
-              "end_date": {
-                "type":"string",
-                "description": "Czas zakończęnia nastepnego kroku"
-              }
-            }
-          }
-        },
-        "open_mails": {
-          "type": "integer",
-          "description": "Liczba wyświetleń wiadomości"
-        },
-        "report": {
-          "type": "boolean",
-          "description": "Czy zalicza się do raportów"
-        },
-        "created_at": {
-          "type": "string",
-          "description": "Data utworzenia podsumowania"
-        },
-        "modified_at": {
-          "type": "string",
-          "description": "Data ostatniej aktualizacji"
-        }
       }
     },
-    "MeetingModelDetails": {
+
+    "ProvidersResponse": {
       "type": "object",
       "properties": {
-        "id": {
-          "type": "integer",
-          "description": "Unikalny identyfikator spotkania"
-        },
-        "hash": {
+        "code": {
           "type": "string",
-          "description": "Hash spotkania"
-        },
-        "id_user": {
-          "type": "integer",
-          "description": "identyfikator handlowca"
-        },
-        "id_customer": {
-          "type": "string",
-          "description": "identyfikator klienta"
-        },
-        "status": {
-          "type": "string",
-          "description": "Status spotkania (finished - spotkanie wysłane do klienta, saved - spotkanie zapisane, interrupted - spotkanie przerwane)"
-        },
-        "start_date": {
-          "type": "string",
-          "description": "Data rozpoczęcia spotkania"
-        },
-        "end_date": {
-          "type": "string",
-          "description": "Data zakończęnia spotkania"
-        },
-        "address": {
-          "type": "string",
-          "description": "Adres spotkania"
-        },
-        "visits": {
-          "type": "integer",
-          "description": "Liczba wyświetleń podsumowania"
-        },
-        "gps_lat": {
-          "type": "string",
-          "description": "Współrzędne gps lat"
-        },
-        "gps_lng": {
-          "type": "string",
-          "description": "Współrzędne gps lon"
-        },
-        "type": {
-          "type": "string",
-          "description": "Typ spotkania (anonymous, standard)"
-        },
-        "next_steps": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type":"integer",
-                "description": "Unikalny identyfikator kroku spotkania"
-              },
-              "id_type": {
-                "type":"integer",
-                "description": "Id typu nastepnego kroku"
-              },
-              "description": {
-                "type":"string",
-                "description": "Opis kroku"
-              },
-              "start_date": {
-                "type":"string",
-                "description": "Czas rozpoczęcia nastepnego kroku"
-              },
-              "end_date": {
-                "type":"string",
-                "description": "Czas zakończęnia nastepnego kroku"
-              }
-            }
-          }
-        },
-        "open_mails": {
-          "type": "integer",
-          "description": "Liczba wyświetleń wiadomości"
-        },
-        "modules": {
-          "type": "array",
-          "items": {
-            "type":"object",
-            "properties": {
-              "id_module":{
-                "type":"integer"
-              },
-              "name": {
-                "type":"string",
-                "description":"Nazwa modułu"
-              },
-              "start_date": {
-                "type":"string",
-                "description":"Data wejścia w moduł",
-                "example":"2019-01-01 01:01:01"
-              },
-              "time_spent": {
-                "type":"integer",
-                "description":"Czas spędzony w module w sekundach"
-              }
-            }
-          }
-        },
-        "created_at": {
-          "type": "string",
-          "description": "Data utworzenia podsumowania"
-        },
-        "modified_at": {
-          "type": "string",
-          "description": "Data ostatniej aktualizacji"
-        }
-      }
-    },
-    "CustomerModel": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unikalny identyfikator klienta"
+          "description": "Kod usługodawcy GPS"
         },
         "name": {
           "type": "string",
-          "description": "Imię klienta",
-          "example": "Jan"
-        },
-        "lastname": {
-          "type": "string",
-          "description": "Nazwisko klienta",
-          "example": "Kowalski"
-        },
-        "email": {
-          "type": "string",
-          "description": "Email klienta"
-        },
-        "city": {
-          "type": "string",
-          "description": "Miasto"
-        },
-        "post": {
-          "type": "string",
-          "description": "Poczta klienta"
-        },
-        "post_code": {
-          "type": "string",
-          "description": "Kod pocztowy klienta"
-        },
-        "id_user": {
-          "type": "string",
-          "description": "Id użytkownika który dodał klienta"
-        },
-        "created_at": {
-          "type": "string",
-          "description": "Data dodania klienta"
-        },
-        "modified_at": {
-          "type": "string",
-          "description": "Data ostatniej aktualizacji"
-        },
-        "delete_yn": {
-          "type": "string",
-          "description": "Czy jest usunięty Y/N"
-        }
-      }
-    },
-    "DescriptionResponse": {
-      "type": "object",
-      "properties": {
-        "error_code": {
-          "type": "string"
-        },
-        "error_description": {
-          "type": "string"
-        },
-        "message": {
-          "type": "string"
-        },
-        "validator": {
-          "type": "array",
-          "example": []
-        }
-      }
-    },
-    "ReferencesPerson":{
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "integer",
-          "description": "Unikalny identyfikator"
-        },
-        "name": {
-          "type": "string",
-          "description": "Nazwa klienta referencyjnego"
-        },
-        "age": {
-          "type": "string",
-          "description": "Wiek"
-        },
-        "phone": {
-          "type": "string",
-          "description": "Numer telefonu"
-        },
-        "job_position": {
-          "type": "string",
-          "description": "Posada"
-        },
-        "comment": {
-          "type": "string",
-          "description": "Komentarz"
-        },
-        "id_meeting": {
-          "type": "integer",
-          "description": "Id spotkania"
-        },
-        "created_at": {
-          "type": "string",
-          "description": "Data utworzenia"
-        },
-        "created_by": {
-          "type": "string",
-          "description": "utworzone przez"
-        },
-        "delete_yn": {
-          "type": "string",
-          "description": "Czy jest usunięty Y/N"
-        }
-      }
-    },
-    "ResponseServer": {
-      "type": "object",
-      "properties": {
-        "timestamp": {
-          "type": "string"
-        }
-      }
-    },
-    "ResponseSuccess": {
-      "type": "object",
-      "properties": {
-        "status": {
-          "type": "integer",
-          "example": 200
-        },
-        "data": {
-          "type": "array",
-          "example": []
-        },
-        "description": {
-          "type": "object",
-          "properties": {
-            "$ref": "#/definitions/DescriptionResponse"
-          }
-        },
-        "server": {
-          "type": "object",
-          "properties": {
-            "$ref": "#/definitions/ResponseServer"
-          }
-        }
-      }
-    },
-    "Pagination": {
-      "type": "object",
-      "properties": {
-        "page": {
-          "type": "integer"
-        },
-        "pages_count": {
-          "type": "integer"
-        },
-        "per_page": {
-          "type": "integer"
-        },
-        "total": {
-          "type": "integer"
-        }
-      }
-    },
-    "CustomersResponse": {
-      "type": "object",
-      "properties": {
-        "status": {
-          "type":"integer",
-          "example": 200
-        },
-        "data": {
-          "type": "object",
-          "properties": {
-            "list": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/CustomerModel"
-              }
-            },
-            "pagination": {
-              "$ref": "#/definitions/Pagination"
-            }
-          }
+          "description": "Nazwa usługodawcy GPS"
         }
       }
     }

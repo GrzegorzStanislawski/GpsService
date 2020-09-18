@@ -37,7 +37,7 @@ interface GpsProviderInterface
 
 	public function getByAddress(String $address);
 
-	public function getByPosition(float $lat, float $lng);
+	public function getByPosition(array $position);
 
 
 }//end class

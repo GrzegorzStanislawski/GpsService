@@ -89,7 +89,7 @@ class AzureProvider implements GpsProviderInterface
     }//end getByAddress()
 
 
-    public function getByPosition(float $lat, float $lng)
+    public function getByPosition(array $position)
     {
         return 'test';
 

@@ -21,31 +21,24 @@ class GpsAddressController extends GpsController
     public function address(Request $request): void
     {
         try {
-            $this->address = $request->input('address');
+            $this->position = [
+                'lat' => $request->input('lat'),
+                'lng' => $request->input('lng'),
+            ];
 
-            $this->address = 'Dworskiego 55/50, Przemysl, Polska';
+            if ((bool) $this->position['lat'] === false) {
+                throw new \Exception('Empty field lat');
+            }//end if
 
-            if ((bool) $this->address === false) {
-                throw new \Exception('Empty field address');
+            if ((bool) $this->position['lng'] === false) {
+                throw new \Exception('Empty field lng');
             }//end if
 
             $this->cacheReturn();
             $this->init($request);
-
-            $position = $this->provider->getByAddress($this->address);
-
-            \Db::insert(
-                'INSERT INTO `GPS_CACHE` (`LAT`, `LNG`, `ADDRESS`, `USED`, `CREATED_AT`, `CREATED_BY`) VALUES (:LAT, :LNG, :ADDRESS, 1, :CREATED_AT, :CREATED_BY)',
-                [
-                    'LAT'        => $position['lat'],
-                    'LNG'        => $position['lng'],
-                    'ADDRESS'    => $this->address,
-                    'CREATED_AT' => date('Y-m-d H:i:s'),
-                    'CREATED_BY' => 'TEST',
-                ]
-            );
-
-            ApiResponse::send(200, $position);
+            $this->address = $this->provider->getByPosition($this->position);
+            $this->cache();
+            ApiResponse::send(200, ['address' => $this->address]);
         } catch (\Exception $e) {
             ApiResponse::send(400, null, $e->getMessage());
         }//end if
@@ -56,8 +49,11 @@ class GpsAddressController extends GpsController
     public function cacheReturn(): void
     {
         $data = (array) \Db::selectOne(
-            'SELECT LAT, LNG FROM GPS_CACHE WHERE UPPER(ADDRESS) LIKE UPPER(:SEARCH) LIMIT 1',
-            ['SEARCH' => '%'.$this->address.'%']
+            'SELECT LAT, LNG FROM GPS_CACHE WHERE LAT = :LAT AND LNG = :LNG LIMIT 1',
+            [
+                'LAT' => $this->position['lat'],
+                'LNG' => $this->position['lng'],
+            ]
         );
 
         if (empty($data) === false) {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Gps\AzureProvider;
 use App\Gps\GoogleProvider;
+use App\Http\ApiResponse;
 
 class GpsController extends Controller
 {
@@ -25,6 +26,23 @@ class GpsController extends Controller
     {
 
     }
+
+
+    public function providers(): void
+    {
+        $data   = [];
+        $data[] = [
+            'code' => 'azure',
+            'name' => 'Azure API'
+        ];
+        $data[] = [
+            'code' => 'google',
+            'name' => 'Google API'
+        ];
+
+        ApiResponse::(200, $data);
+
+    }//end providers()
 
 
     /**

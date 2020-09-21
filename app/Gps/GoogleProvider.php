@@ -59,7 +59,7 @@ class GoogleProvider implements GpsProviderInterface
 
         $data = (array) json_decode($response->getBody(), true);
 
-        if ((bool) $data['error_message'] === true) {
+        if (isset($data['error_message']) === true) {
             throw new \Exception($data['error_message']);
         }//end if
 
@@ -86,7 +86,7 @@ class GoogleProvider implements GpsProviderInterface
 
         $data = (array) json_decode($response->getBody(), true);
 
-        if ((bool) $data['error_message'] === true) {
+        if (isset($data['error_message']) === true) {
             throw new \Exception($data['error_message']);
         }//end if
 

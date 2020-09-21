@@ -57,9 +57,13 @@ class GoogleProvider implements GpsProviderInterface
             ]
         );
 
-        $data   = (array) json_decode($response->getBody(), true);
-        $return = $data['results'][0];
+        $data = (array) json_decode($response->getBody(), true);
 
+        if ((bool) $data['error_message'] === true) {
+            throw new \Exception($data['error_message']);
+        }//end if
+
+        $return = $data['results'][0];
         return (array) $result['geometry']['location'];
 
     }//end getByAddress()
@@ -80,7 +84,12 @@ class GoogleProvider implements GpsProviderInterface
             ]
         );
 
-        $data     = (array) json_decode($response->getBody(), true);
+        $data = (array) json_decode($response->getBody(), true);
+
+        if ((bool) $data['error_message'] === true) {
+            throw new \Exception($data['error_message']);
+        }//end if
+
         $sAddress = '';
 
         if (isset($data['results'][0]['formatted_address']) === true) {

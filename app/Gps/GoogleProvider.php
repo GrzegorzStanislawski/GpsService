@@ -64,7 +64,7 @@ class GoogleProvider implements GpsProviderInterface
         }//end if
 
         $return = $data['results'][0];
-        return (array) $result['geometry']['location'];
+        return (array) $return['geometry']['location'];
 
     }//end getByAddress()
 

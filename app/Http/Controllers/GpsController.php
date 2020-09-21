@@ -16,6 +16,13 @@ class GpsController extends Controller
 
     public $position;
 
+    /**
+     * Provder class.
+     *
+     * @var mixed
+     */
+    public $provider;
+
 
     /**
      * Create a new controller instance.

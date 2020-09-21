@@ -48,7 +48,7 @@ class GoogleProvider implements GpsProviderInterface
         $client   = new \GuzzleHttp\Client(['base_uri' => 'https://maps.googleapis.com/']);
         $response = $client->request(
             'GET',
-            'search/address/json',
+            'maps/api/geocode/json',
             [
                 'query' => [
                     'key'     => $this->token,

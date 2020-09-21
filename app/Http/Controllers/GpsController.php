@@ -76,7 +76,7 @@ class GpsController extends Controller
         }//end if
 
         if ($provider === 'google') {
-            $this->provder = new GoogleProvider($this->token);
+            $this->provider = new GoogleProvider($this->token);
         } else {
             $this->provider = new AzureProvider($this->token);
         }//end if

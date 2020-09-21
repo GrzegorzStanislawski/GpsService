@@ -11,6 +11,8 @@
 |
 */
 
+define('PATH_ROOT', __DIR__.'/../');
+
 $app = require __DIR__.'/../bootstrap/app.php';
 
 /*

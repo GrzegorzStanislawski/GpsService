@@ -91,6 +91,10 @@ $app->singleton(
 |
 */
 
+$app->routeMiddleware([
+    'api' => App\Http\Middleware\ApiMiddleware::class,
+]);
+
 $app->router->group([
     'namespace' => 'App\Http\Controllers',
 ], function ($router) {

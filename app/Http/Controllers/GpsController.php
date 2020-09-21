@@ -40,7 +40,7 @@ class GpsController extends Controller
             'name' => 'Google API'
         ];
 
-        ApiResponse::(200, $data);
+        ApiResponse::send(200, $data);
 
     }//end providers()
 

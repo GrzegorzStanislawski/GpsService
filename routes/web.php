@@ -20,5 +20,5 @@ $router->get('swagger/schema', 'SwaggerController@schema');
 $router->group(['prefix' => 'api'], function () use ($router) {
 	$router->post('address', 'GpsAddressController@address');
 	$router->post('position', 'GpsPositionController@position');
-	$router->post('providers', 'GpsController@providers');
+	$router->get('providers', 'GpsController@providers');
 });
